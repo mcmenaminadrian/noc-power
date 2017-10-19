@@ -13,7 +13,7 @@ class Noc {
 private:
 	const long columnCount;
 	const long rowCount;
-    const uint64_t blockSize;
+	const uint64_t blockSize;
 	unsigned long ptrBasePageTables;
 	std::vector<std::vector<Tile * > > tiles;
 	std::vector<long> answers;

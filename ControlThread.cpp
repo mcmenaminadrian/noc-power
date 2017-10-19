@@ -31,6 +31,25 @@ void ControlThread::releaseToRun()
 	go.wait(lck);
 }
 
+void ControlThread::sufficientPower(Processor *pActive)
+{
+	unique_lock<mutex> lck(powerLock);
+	bool statePower = pActive->getParent()->getPowerState();
+	if (!statePower) {
+		lck.unlock();
+		return; //already dark
+	}
+	powerCount++;
+	if (powerCount > POWER_MAX) {
+		lck.unlock();
+		pActive->getParent->setPowerStateOff();
+		return;	
+	}
+	lck.unlock();
+	return;
+}
+		
+
 void ControlThread::incrementTaskCount()
 {
 	unique_lock<mutex> lock(taskCountLock);

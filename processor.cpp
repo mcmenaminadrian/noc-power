@@ -916,6 +916,10 @@ void Processor::waitATick()
 	ControlThread *pBarrier = masterTile->getBarrier();
 	pBarrier->releaseToRun();
 	totalTicks++;
+	if (!pBarrier->sufficientPower(this)) {
+		//enforce dark silicon
+		waitATick();
+	}
 	if (totalTicks%clockTicks == 0) {
 		clockDue = true;
 	}	
@@ -927,7 +931,7 @@ void Processor::waitATick()
 
 void Processor::waitGlobalTick()
 {
-    for (uint64_t i = 0; i < GLOBALCLOCKSLOW; i++) {
+	for (uint64_t i = 0; i < GLOBALCLOCKSLOW; i++) {
 		waitATick();
 	}
 }

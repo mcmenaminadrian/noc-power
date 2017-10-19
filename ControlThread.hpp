@@ -27,6 +27,7 @@ private:
 	std::mutex taskCountLock;
 	std::mutex blockLock;
 	std::mutex cheatLock;
+	std::mutex powerLock;
 	MainWindow *mainWindow;
 	void run();
 
@@ -40,6 +41,7 @@ public:
 	void waitForBegin();
 	bool tryCheatLock();
 	void unlockCheatLock();
+	void sufficientPower();
 };
 
 #endif
