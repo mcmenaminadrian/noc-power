@@ -916,7 +916,7 @@ void Processor::waitATick()
 	ControlThread *pBarrier = masterTile->getBarrier();
 	pBarrier->releaseToRun();
 	totalTicks++;
-	if (!pBarrier->sufficientPower(this)) {
+	if (!parent->getPowerState()) {
 		//enforce dark silicon
 		waitATick();
 	}
