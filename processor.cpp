@@ -294,6 +294,7 @@ const vector<uint8_t> Processor::requestRemoteMemory(
 		memoryRequest.setWrite();
 	}
 	//wait for response
+	getParent()->setPowerStateOff();
 	if (masterTile->treeLeaf->acceptPacketUp(memoryRequest)) {
 		masterTile->treeLeaf->routePacket(memoryRequest);
 	} else {
@@ -313,6 +314,7 @@ void Processor::transferGlobalToLocal(const uint64_t& address,
 	vector<uint8_t> answer = requestRemoteMemory(size,
 		maskedAddress, get<1>(tlbEntry) +
 		(maskedAddress & bitMask), write);
+	getParent()->setPowerStateOn();
 	for (auto x: answer) {
 		masterTile->writeByte(get<1>(tlbEntry) + offset + 
 			(maskedAddress & bitMask), x);
@@ -329,6 +331,7 @@ void Processor::transferLocalToGlobal(const uint64_t& address,
 	uint64_t maskedAddress = address & BITMAP_MASK;
 	//make the call - ignore the results
 	requestRemoteMemory(size, get<0>(tlbEntry), maskedAddress, true);
+	getParent()->setPowerStateOn();
 }
 
 uint64_t Processor::triggerSmallFault(
@@ -916,16 +919,15 @@ void Processor::waitATick()
 	ControlThread *pBarrier = masterTile->getBarrier();
 	pBarrier->releaseToRun();
 	totalTicks++;
-	if (!parent->getPowerState()) {
-		//enforce dark silicon
-		waitATick();
-	}
 	if (totalTicks%clockTicks == 0) {
 		clockDue = true;
 	}	
 	if (clockDue && inClock == false) {
 		clockDue = false;
 		activateClock();
+	}
+	if (getParent()->getPowerState() == false) {
+		waitATick();
 	}
 }
 
@@ -959,6 +961,7 @@ void Processor::activateClock()
 	if (inInterrupt) {
 		return;
 	}
+	getParent()->setPowerStateOn(); //wake up processor if required
 	inClock = true;
 	uint64_t pages = TILE_MEM_SIZE >> pageShift;
 	interruptBegin();

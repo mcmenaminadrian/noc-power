@@ -139,6 +139,7 @@ public:
 	void setPCNull();
 	void start();
 	void pcAdvance(const long count = sizeof(long));
+	bool isInInterrupt() const { return inInterrupt; }
     	uint64_t getRegister(const uint64_t& regNumber) const;
     	void setRegister(const uint64_t& regNumber,
         	const uint64_t& value);

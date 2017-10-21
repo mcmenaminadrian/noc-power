@@ -4,6 +4,7 @@
 #include <thread>
 #include <condition_variable>
 #include "mainwindow.h"
+#include "processor.hpp"
 
 #ifndef __CONTROLTHREAD_
 #define __CONTROLTHREAD_
@@ -21,6 +22,7 @@ private:
 	volatile uint16_t taskCount;
 	volatile uint16_t signedInCount;
 	volatile uint16_t blockedInTree;
+	volatile uint16_t powerCount;
 	std::mutex runLock;
 	bool beginnable;
 	std::condition_variable go;
@@ -30,6 +32,7 @@ private:
 	std::mutex powerLock;
 	MainWindow *mainWindow;
 	void run();
+	void sufficientPower(Processor *p);
 
 public:
 	ControlThread(unsigned long count = 0, MainWindow *pWind = nullptr);

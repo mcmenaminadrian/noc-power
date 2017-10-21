@@ -8,6 +8,10 @@
 
 using namespace std;
 
+
+static uint POWER_MAX = 48; //maximum number of active cores
+static uint powerCount = 0;
+
 ControlThread::ControlThread(unsigned long tcks, MainWindow *pWind):
     ticks(tcks), taskCount(0), beginnable(false), mainWindow(pWind)
 {
@@ -24,6 +28,9 @@ void ControlThread::releaseToRun()
 	if (signedInCount >= taskCount) {
 		taskCountLock.unlock();
 		lck.unlock();
+		powerLock.lock();
+		powerCount = 0;
+		powerLock.unlock();
 		run();
 		return;
 	}
@@ -42,7 +49,9 @@ void ControlThread::sufficientPower(Processor *pActive)
 	powerCount++;
 	if (powerCount > POWER_MAX) {
 		lck.unlock();
-		pActive->getParent->setPowerStateOff();
+		if (!pActive->isInInterrupt()) {
+			pActive->getParent()->setPowerStateOff();
+		}
 		return;	
 	}
 	lck.unlock();
