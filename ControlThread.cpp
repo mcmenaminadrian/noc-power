@@ -10,7 +10,7 @@
 using namespace std;
 
 
-static uint POWER_MAX = 48; //maximum number of active cores
+static uint POWER_MAX = 12; //maximum number of active cores
 
 ControlThread::ControlThread(unsigned long tcks, MainWindow *pWind):
     ticks(tcks), taskCount(0), beginnable(false), mainWindow(pWind)

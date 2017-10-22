@@ -927,7 +927,7 @@ void Processor::waitATick()
 		clockDue = false;
 		activateClock();
 	}
-	if (masterTile->getPowerState() == false) {
+	if (!inInterrupt && masterTile->getPowerState() == false) {
 		waitATick();
 	}
 }
