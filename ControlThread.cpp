@@ -4,13 +4,13 @@
 #include <thread>
 #include <condition_variable>
 #include "mainwindow.h"
+#include "processor.hpp"
 #include "ControlThread.hpp"
 
 using namespace std;
 
 
 static uint POWER_MAX = 48; //maximum number of active cores
-static uint powerCount = 0;
 
 ControlThread::ControlThread(unsigned long tcks, MainWindow *pWind):
     ticks(tcks), taskCount(0), beginnable(false), mainWindow(pWind)

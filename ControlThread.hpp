@@ -4,7 +4,6 @@
 #include <thread>
 #include <condition_variable>
 #include "mainwindow.h"
-#include "processor.hpp"
 
 #ifndef __CONTROLTHREAD_
 #define __CONTROLTHREAD_
