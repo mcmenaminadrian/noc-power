@@ -41,7 +41,7 @@ void ControlThread::releaseToRun()
 void ControlThread::sufficientPower(Processor *pActive)
 {
 	unique_lock<mutex> lck(powerLock);
-	bool statePower = pActive->getParent()->getPowerState();
+	bool statePower = pActive->getTile()->getPowerState();
 	if (!statePower) {
 		lck.unlock();
 		return; //already dark
@@ -50,7 +50,7 @@ void ControlThread::sufficientPower(Processor *pActive)
 	if (powerCount > POWER_MAX) {
 		lck.unlock();
 		if (!pActive->isInInterrupt()) {
-			pActive->getParent()->setPowerStateOff();
+			pActive->getTile()->setPowerStateOff();
 		}
 		return;	
 	}

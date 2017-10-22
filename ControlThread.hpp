@@ -8,7 +8,7 @@
 #ifndef __CONTROLTHREAD_
 #define __CONTROLTHREAD_
 
-
+class Processor;
 
 class ControlThread: public QObject {
     Q_OBJECT
