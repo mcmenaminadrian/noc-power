@@ -31,7 +31,6 @@ private:
 	std::mutex powerLock;
 	MainWindow *mainWindow;
 	void run();
-	void sufficientPower(Processor *p);
 
 public:
 	ControlThread(unsigned long count = 0, MainWindow *pWind = nullptr);
@@ -43,7 +42,7 @@ public:
 	void waitForBegin();
 	bool tryCheatLock();
 	void unlockCheatLock();
-	void sufficientPower();
+	void sufficientPower(Processor *p);
 };
 
 #endif

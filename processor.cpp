@@ -912,6 +912,7 @@ void Processor::pcAdvance(const long count)
 	programCounter += count;
 	fetchAddressRead(programCounter);
 	waitATick();
+	masterTile->getBarrier()->sufficientPower(this);
 }
 
 void Processor::waitATick()
@@ -934,7 +935,12 @@ void Processor::waitATick()
 void Processor::waitGlobalTick()
 {
 	for (uint64_t i = 0; i < GLOBALCLOCKSLOW; i++) {
-		waitATick();
+		ControlThread *pBarrier = masterTile->getBarrier();
+		pBarrier->releaseToRun();
+		totalTicks++;
+		if (totalTicks%clockTicks == 0) {
+			clockDue == true;
+		}
 	}
 }
 
