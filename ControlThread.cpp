@@ -9,8 +9,16 @@
 
 using namespace std;
 
-
-static uint POWER_MAX = 12; //maximum number of active cores
+// 30% of 'full' power is used by network
+// which we cannot turn off
+// hence 35% gives us 5/70 * 128 cores etc
+// so 8 cores is 34.375% power
+// 12 cores is 36.5625% power
+// 16 cores is 38.75%
+// 32 cores is 47.5%
+// 50% is 36.57 cores ie 36
+// 75% is 82.28 cores ie 82 cores
+static uint POWER_MAX = 82; //maximum number of active cores
 
 ControlThread::ControlThread(unsigned long tcks, MainWindow *pWind):
     ticks(tcks), taskCount(0), beginnable(false), mainWindow(pWind)
