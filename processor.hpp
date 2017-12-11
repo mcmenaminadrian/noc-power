@@ -122,6 +122,7 @@ private:
         	mapToGlobalAddress(const uint64_t& address);
     	void fetchAddressToRegister();
 	void activateClock();
+	void idleTick();
 	//adjust numbers below to change how CLOCK fuctions
     	const uint8_t clockWipe = 1;
     	const uint16_t clockTicks = 1000;

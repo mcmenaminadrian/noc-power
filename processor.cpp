@@ -905,6 +905,13 @@ void Processor::start()
 	switchModeVirtual();
 	ControlThread *pBarrier = masterTile->getBarrier();
 	pBarrier->waitForBegin();
+	//next lines to enforce power discipline at very start
+	int jitter = rand() % 257; //pick a prime
+	for (int i = 0; i < jitter; i++) {
+		idleTick();
+	}
+	pBarrier->sufficientPower(this);
+	waitATick();
 }	
 
 void Processor::pcAdvance(const long count)
@@ -915,6 +922,12 @@ void Processor::pcAdvance(const long count)
 	masterTile->getBarrier()->sufficientPower(this);
 }
 
+void Processor::idleTick()
+{
+	ControlThread *pBarrier = masterTile->getBarrier();
+	pBarrier->releaseToRun();
+}
+
 void Processor::waitATick()
 {
 	ControlThread *pBarrier = masterTile->getBarrier();
@@ -923,7 +936,7 @@ void Processor::waitATick()
 	if (totalTicks%clockTicks == 0) {
 		clockDue = true;
 	}	
-	if (clockDue && inClock == false) {
+	if (clockDue && !inClock) {
 		clockDue = false;
 		activateClock();
 	}
